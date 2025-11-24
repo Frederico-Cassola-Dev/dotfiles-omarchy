@@ -90,6 +90,28 @@ if type fzf &>/dev/null; then
   alias ff="fzf --preview 'bat --style=numbers --color=always {}'" # Files
 fi
 
+
+# ----------------------------------------------
+# FZF-NEOVIM - Open a folder or a file with neovim
+nf() {
+  local selection
+  # Use fd to list all files and directories
+  selection=$(fd --type f --type d | fzf --preview '[[ -f {} ]] && bat --style=numbers --color=always {} || echo {} is a directory' --preview-window=right:60%)
+  if [ -n "$selection" ]; then
+    if [ -d "$selection" ]; then
+      nvim "$selection"
+    else
+      nvim "$selection"
+    fi
+  fi
+}
+
+# Just a file
+# nf() {
+#   local file=$(fzf --preview 'bat --style=numbers --color=always {}')
+#   [ -n "$file" ] && nvim "$file"
+# }
+
 # ----------------------------------------------
 # ZOXIDE- Alias zd -> cd
 if command -v zoxide &> /dev/null; then
@@ -119,3 +141,6 @@ fi
 # NEOVIM- Call neovim always in the current folder if no argument
 #
 n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
+
+
+
