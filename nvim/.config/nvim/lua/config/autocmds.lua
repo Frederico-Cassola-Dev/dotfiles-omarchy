@@ -26,3 +26,11 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     vim.bo.filetype = "javascript"
   end,
 })
+--
+-- -- Auto-Format on Save - ### BASH ###
+-- vim.cmd([[
+--   augroup FormatAutogroup
+--     autocmd!
+--     autocmd BufWritePre *.sh,*.bash lua vim.lsp.buf.format({ async = false })
+--   augroup END
+-- ]])
