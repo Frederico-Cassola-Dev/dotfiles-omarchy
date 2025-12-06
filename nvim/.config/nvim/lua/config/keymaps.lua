@@ -18,3 +18,6 @@ end, { silent = true })
 vim.keymap.set("n", "<leader>fh", function()
   require("lazyvim.util").pick("files", { hidden = true })()
 end, { desc = "Find Files (show hidden)" })
+
+-- UndotreeToggle
+vim.keymap.set("n", "<leader><F5>", ":UndotreeToggle<CR>", { silent = true, desc = "Toggle Undotree" })
