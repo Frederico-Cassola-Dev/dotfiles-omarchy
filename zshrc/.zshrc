@@ -1,119 +1,123 @@
-# ----------------------------------------------
-# Initialize zsh completion system (needed for many plugins)
+#############################################
+# Core zsh & completion
+#############################################
+
 autoload -Uz compinit
 compinit
 
-# ----------------------------------------------
-# Oh My Zsh Configuration
+#############################################
+# Oh My Zsh
+#############################################
 
-# Path to Oh My Zsh installation
 export ZSH="$HOME/.oh-my-zsh"
-
-# Oh My Zsh theme (empty disables theme)
 ZSH_THEME=""
 
-# Enable plugins: git, syntax highlighting, autosuggestions
 plugins=(
   git
   zsh-syntax-highlighting
-  zsh-autosuggestions 
+  zsh-autosuggestions
 )
 
-# Source Oh My Zsh core script (loads plugins and theme)
-source $ZSH/oh-my-zsh.sh
+source "$ZSH/oh-my-zsh.sh"
 
-# ----------------------------------------------
-# External tool initializations
+#############################################
+# Prompt & navigation tools
+#############################################
 
-# Starship prompt initialization
+# Starship prompt
 eval "$(starship init zsh)"
 
-# zoxide for smart directory jumping
+# zoxide: smarter cd
 eval "$(zoxide init zsh)"
 
-# ----------------------------------------------
-# Environment variables
+#############################################
+# Editor & environment
+#############################################
 
 export EDITOR="nvim"
 export SUDO_EDITOR="$EDITOR"
-
-# Uncomment and set PostgreSQL host if needed
 # export PGHOST="/var/run/postgresql"
 
-# ----------------------------------------------
-# Shell history configuration
+#############################################
+# History
+#############################################
 
 HISTFILE=~/.history
 HISTSIZE=10000
 SAVEHIST=50000
-# Enable incremental append history
+
 setopt inc_append_history
-# Enable void duplicate entries in history
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_ALL_DUPS
-# Enable share history if multiple terminals concurrently
 setopt share_history
 
-# ----------------------------------------------
-# CARAPACE shell completion framework configuration
+#############################################
+# Carapace + Catppuccin
+#############################################
 
-export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'  # enable support for multiple shells
-zstyle ':completion:*' format '%{\e[2;37m%}Completing %d%{\e[m%}'
-zstyle ':completion:*' format '%F{240}Completing %d%f' 
+# Catppuccin Mocha LS_COLORS (requires: pacman -S vivid)
+if command -v vivid &> /dev/null; then
+  export LS_COLORS="$(vivid generate catppuccin-mocha)"
+fi
+
+# Let Carapace reuse other completion specs when needed
+export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+
+# Subtle “Completing …” header color
+zstyle ':completion:*' format '%F{240}Completing %d%f'
+
+# Carapace + Catppuccin look for completion menus
+carapace --style 'carapace.Value=bold,bright-cyan'
+carapace --style 'carapace.Description=dim,bright-black'
+
+# Initialize Carapace completions
 source <(carapace _carapace)
 
-# ----------------------------------------------
-# Trash-cli completions
+#############################################
+# Trash-cli
+#############################################
 
-# These completions should be installed once via a script, not every shell start:
+# One-time completion install (keep commented for reference)
 # cmds=(trash-empty trash-list trash-restore trash-put trash)
-# for cmd in ${cmds[@]}; do
+# for cmd in "${cmds[@]}"; do
 #   $cmd --print-completion bash | sudo tee /usr/share/bash-completion/completions/$cmd
-#   $cmd --print-completion zsh | sudo tee /usr/share/zsh/site-functions/_$cmd
+#   $cmd --print-completion zsh  | sudo tee /usr/share/zsh/site-functions/_$cmd
 #   $cmd --print-completion tcsh | sudo tee /etc/profile.d/$cmd.completion.csh
 # done
 
-# ----------------------------------------------
-# Trash-cli command aliases for convenience
 if command -v trash &> /dev/null; then
-  alias tp='trash-put'      # move files to trash
-  alias tl='trash-list'     # list trashed files
-  alias tr='trash-restore'  # restore trashed files
-  alias te='trash-empty'    # empty trash
+  alias tp='trash-put'
+  alias tl='trash-list'
+  alias tr='trash-restore'
+  alias te='trash-empty'
 fi
 
-# ----------------------------------------------
-# FZF- Bind fuzzy search key bindings (history and files)
+#############################################
+# FZF helpers
+#############################################
 
-if type fzf &>/dev/null; then
-  alias fh='fc -rl 1 | fzf' # History
-  alias ff="fzf --preview 'bat --style=numbers --color=always {}'" # Files
+if command -v fzf &> /dev/null; then
+  alias fh='fc -rl 1 | fzf'  # history
+  alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
 fi
 
-
-# ----------------------------------------------
-# FZF-NEOVIM - Open a folder or a file with neovim
+# Open file or directory in Neovim using fd + fzf
 nf() {
   local selection
-  # Use fd to list all files and directories
-  selection=$(fd --type f --type d | fzf --preview '[[ -f {} ]] && bat --style=numbers --color=always {} || echo {} is a directory' --preview-window=right:60%)
+  selection=$(
+    fd --type f --type d \
+      | fzf --preview '[[ -f {} ]] && bat --style=numbers --color=always {} || echo {} is a directory' \
+             --preview-window=right:60%
+  )
   if [ -n "$selection" ]; then
-    if [ -d "$selection" ]; then
-      nvim "$selection"
-    else
-      nvim "$selection"
-    fi
+    nvim "$selection"
   fi
 }
 
-# Just a file
-# nf() {
-#   local file=$(fzf --preview 'bat --style=numbers --color=always {}')
-#   [ -n "$file" ] && nvim "$file"
-# }
+#############################################
+# Zoxide: cd replacement
+#############################################
 
-# ----------------------------------------------
-# ZOXIDE- Alias zd -> cd
 if command -v zoxide &> /dev/null; then
   alias cd="zd"
   zd() {
@@ -127,8 +131,9 @@ if command -v zoxide &> /dev/null; then
   }
 fi
 
-# ----------------------------------------------
-# LS- Alias using eza for colorful output with icons
+#############################################
+# ls / eza aliases
+#############################################
 
 if command -v eza &> /dev/null; then
   alias ls='eza -lha --group-directories-first --icons=auto'
@@ -137,10 +142,14 @@ if command -v eza &> /dev/null; then
   alias lta='lt -a'
 fi
 
-# ----------------------------------------------
-# NEOVIM- Call neovim always in the current folder if no argument
-#
-n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
+#############################################
+# Neovim helper
+#############################################
 
-
-
+n() {
+  if [ "$#" -eq 0 ]; then
+    nvim .
+  else
+    nvim "$@"
+  fi
+}
