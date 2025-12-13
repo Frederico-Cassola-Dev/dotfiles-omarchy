@@ -12,3 +12,8 @@ exec zsh
 #
 # Make an alias for invoking commands you use constantly
 # alias p='python'
+
+. "$HOME/.atuin/bin/env"
+
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+eval "$(atuin init bash)"
