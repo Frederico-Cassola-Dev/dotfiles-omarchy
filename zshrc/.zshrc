@@ -172,3 +172,10 @@ tmuxa() {
   tmux attach -t "$session"
 }
 
+
+#############################################
+# Atuin search history
+#############################################
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"
