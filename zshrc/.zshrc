@@ -153,3 +153,22 @@ n() {
     nvim "$@"
   fi
 }
+
+
+#############################################
+# Tmux attach session at before start tmux
+#############################################
+
+tmuxa() {
+  session=$(
+    tmux list-sessions -F '#S' 2>/dev/null |
+      fzf --height=60% \
+          --layout=reverse-list \
+          --border=rounded \
+          --margin=20%,30% \
+          --prompt='tmux> '
+  ) || return 1
+
+  tmux attach -t "$session"
+}
+
