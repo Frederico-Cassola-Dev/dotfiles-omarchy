@@ -172,6 +172,21 @@ tmuxa() {
   tmux attach -t "$session"
 }
 
+#############################################
+# Open a new terminal and open TMUX into the last session or tmuxa
+#############################################
+
+
+if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+    session_count=$(tmux list-sessions 2>/dev/null | wc -l)
+    if [ "$session_count" -eq 0 ]; then
+        tmux  # Continuum restores
+    elif [ "$session_count" -eq 1 ]; then
+        tmux attach  # Auto-attach single session
+    else
+        tmuxa  # Fzf picker for multiple
+    fi
+fi
 
 #############################################
 # Atuin search history
