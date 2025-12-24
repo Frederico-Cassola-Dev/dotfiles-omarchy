@@ -132,7 +132,7 @@ if command -v zoxide &> /dev/null; then
 fi
 
 #############################################
-# ls / eza aliases
+# Aliases ls / eza
 #############################################
 
 if command -v eza &> /dev/null; then
@@ -153,7 +153,6 @@ n() {
     nvim "$@"
   fi
 }
-
 
 #############################################
 # Tmux attach session at before start tmux
@@ -176,7 +175,6 @@ tmuxa() {
 # Open a new terminal and open TMUX into the last session or tmuxa
 #############################################
 
-
 if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
     session_count=$(tmux list-sessions 2>/dev/null | wc -l)
     if [ "$session_count" -eq 0 ]; then
@@ -191,7 +189,8 @@ fi
 #############################################
 # Atuin search history
 #############################################
-. "$HOME/.atuin/bin/env"
+
+[[ -f ~/.atuin/bin/env ]] && . "$HOME/.atuin/bin/env"
 
 eval "$(atuin init zsh)"
 export PATH="$HOME/.local/bin:$PATH"
@@ -204,7 +203,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 export PATH="$HOME/.local/bin:$PATH"
 
+############################################
 # Aliases from .bashrc
+############################################
+
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
@@ -213,10 +215,32 @@ alias la='ls -A'
 alias l='ls -CF'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
+############################################
 # SSH Agent: Auto-start + load keys if empty
-if [ -z "$SSH_AUTH_SOCK" ] || ! ssh-add -l >/dev/null 2>&1; then
-  eval "$(ssh-agent -s)"
-  ssh-add ~/.ssh/id_ed25519_github
-  ssh-add ~/.ssh/id_ed25519_gitlab
+############################################
+
+if [[ -f ~/.ssh/id_ed25519_github ]] || [[ -f ~/.ssh/id_ed25519_gitlab ]]; then
+    if [ -z "$SSH_AUTH_SOCK" ] || ! ssh-add -l >/dev/null 2>&1; then
+        eval "$(ssh-agent -s)"
+        [[ -f ~/.ssh/id_ed25519_github ]] && ssh-add ~/.ssh/id_ed25519_github
+        [[ -f ~/.ssh/id_ed25519_gitlab ]] && ssh-add ~/.ssh/id_ed25519_gitlab
+    fi
 fi
 
+############################################
+# Testing run script globaly
+############################################
+
+alias test='test-create-global-script.sh'
+
+
+############################################
+# cht.sh Cheat Sheet
+############################################
+
+# Need to add this to have zsh autocomplete for cht.sh
+# mkdir -p ~/.zsh.d
+# curl https://cheat.sh/:zsh > ~/.zsh.d/_cht
+# Load the plugin cht.sh
+[[ -d ~/.zsh.d ]] && fpath=(~/.zsh.d $fpath)
+alias cheat='cht.sh'
