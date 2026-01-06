@@ -228,11 +228,8 @@ if [[ -f ~/.ssh/id_ed25519_github ]] || [[ -f ~/.ssh/id_ed25519_gitlab ]]; then
 fi
 
 ############################################
-# Testing run script globaly
+# Alias run script globaly
 ############################################
-
-alias test='test-create-global-script.sh'
-
 
 ############################################
 # cht.sh Cheat Sheet
@@ -244,3 +241,10 @@ alias test='test-create-global-script.sh'
 # Load the plugin cht.sh
 [[ -d ~/.zsh.d ]] && fpath=(~/.zsh.d $fpath)
 alias cheat='cht.sh'
+
+############################################
+# Manage work stack
+############################################
+
+alias manage='manage-stack.sh'
+
