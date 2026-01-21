@@ -105,8 +105,8 @@
   },
   "hyprland/language": {
     "format": "{}",
-    "format-us": "US",
-    "format-us-intl": "INTL",
+    "format-en": "US",
+    "format-en-intl": "INTL",
     "on-click": "hyprctl switchxkblayout \"$(hyprctl devices -j | jq -r '.keyboards[0].name')\"next",
   },
   "bluetooth": {
