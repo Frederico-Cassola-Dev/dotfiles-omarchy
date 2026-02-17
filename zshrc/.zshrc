@@ -228,11 +228,15 @@ if [[ -f ~/.ssh/id_ed25519_github ]] || [[ -f ~/.ssh/id_ed25519_gitlab ]]; then
 fi
 
 ############################################
-# Testing run script globaly
+# Git ultra-rapide sur /mnt/c (Windows filesystem)
 ############################################
-
-alias test='test-create-global-script.sh'
-
+function git() {
+  if [[ "$(pwd)" == /mnt/c/* ]]; then
+    /mnt/c/Windows/System32/cmd.exe /c "git.exe $@"
+  else
+    command git "$@"
+  fi
+}
 
 ############################################
 # cht.sh Cheat Sheet
