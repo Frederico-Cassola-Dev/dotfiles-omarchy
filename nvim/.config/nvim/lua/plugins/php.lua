@@ -4,11 +4,23 @@ return {
     "mason-org/mason.nvim",
     opts = function(_, opts)
       vim.list_extend(opts.ensure_installed, {
+        "intelephense",
         "phpactor",
         "php-cs-fixer",
         "twig-cs-fixer",
         "phpstan",
         "php-debug-adapter",
+      })
+    end,
+  },
+
+  -- Configure Treesitter
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "php",
+        "twig",
       })
     end,
   },
@@ -48,8 +60,6 @@ return {
       },
     },
   },
-
-
 
   -- Configure formatting
   {
