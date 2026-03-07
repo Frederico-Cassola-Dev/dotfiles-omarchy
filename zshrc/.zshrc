@@ -254,3 +254,5 @@ function git() {
 # Load the plugin cht.sh
 [[ -d ~/.zsh.d ]] && fpath=(~/.zsh.d $fpath)
 alias cheat='cht.sh'
+
+export PATH="$HOME/.symfony5/bin:$PATH"
