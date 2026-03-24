@@ -13,3 +13,20 @@ vim.opt.spell = true
 -- Terminal buffers are included in the session.
 -- Folds and tabs are preserved.
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+
+-- Configure clipboard to use Windows' built-in clip.exe and PowerShell
+vim.g.clipboard = {
+  name = "win-clipboard",
+  copy = {
+    ["+"] = "/mnt/c/Windows/System32/clip.exe",
+    ["*"] = "/mnt/c/Windows/System32/clip.exe",
+  },
+  paste = {
+    ["+"] = '/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -Command "Get-Clipboard"',
+    ["*"] = '/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -Command "Get-Clipboard"',
+  },
+  cache_enabled = 1,
+}
+
+-- Use the system clipboard for all yank, delete, and put operations.
+vim.opt.clipboard = "unnamedplus"
