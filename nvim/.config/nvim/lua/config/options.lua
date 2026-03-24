@@ -4,7 +4,6 @@
 vim.opt.relativenumber = false
 vim.opt.spelllang = { "en", "fr" }
 vim.opt.spell = true
-
 -- Change the default snack picker to use telescope
 -- vim.g.lazyvim_picker = "telescope"
 --
@@ -14,19 +13,27 @@ vim.opt.spell = true
 -- Folds and tabs are preserved.
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
--- Configure clipboard to use Windows' built-in clip.exe and PowerShell
-vim.g.clipboard = {
-  name = "win-clipboard",
-  copy = {
-    ["+"] = "/mnt/c/Windows/System32/clip.exe",
-    ["*"] = "/mnt/c/Windows/System32/clip.exe",
-  },
-  paste = {
-    ["+"] = '/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -Command "Get-Clipboard"',
-    ["*"] = '/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -Command "Get-Clipboard"',
-  },
-  cache_enabled = 1,
-}
+-- WSL win32yank clipboard (yank → Windows, paste ← Windows, no ^M)
+-- Force disable tmux + auto-detection
+-- vim.g.loaded_clipboard_provider = 0
+vim.g.loaded_tmux_clipboard = 1
 
--- Use the system clipboard for all yank, delete, and put operations.
+-- Simple clip.exe (no win32yank needed)
+if vim.fn.executable("win32yank.exe") == 1 then
+  print("win32yank.exe is executable")
+  vim.g.clipboard = {
+    name = "win32yank-wsl",
+    copy = {
+      ["+"] = "win32yank.exe -i --crlf",
+      ["*"] = "win32yank.exe -i --crlf",
+    },
+    paste = {
+      ["+"] = "win32yank.exe -o --lf",
+      ["*"] = "win32yank.exe -o --lf",
+    },
+    cache_enabled = 0,
+  }
+else
+  print("win32yank.exe is NOT executable")
+end
 vim.opt.clipboard = "unnamedplus"
