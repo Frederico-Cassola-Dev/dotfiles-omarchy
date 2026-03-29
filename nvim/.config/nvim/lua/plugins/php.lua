@@ -49,8 +49,6 @@ return {
     },
   },
 
-
-
   -- Configure formatting
   {
     "stevearc/conform.nvim",
@@ -65,7 +63,7 @@ return {
           args = {
             "fix",
             "$FILENAME",
-            "--rules=@Symfony", -- Use Symfony coding standards
+            "--rules=@PSR12", -- Use Symfony coding standards
           },
           stdin = false,
         },
