@@ -1,9 +1,19 @@
 -- Options are automatically loaded before lazy.nvim startup
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
+
+-- Respect project `.editorconfig` (indent, tabs, charset, etc.). Built into Neovim 0.9+; see :help editorconfig
+vim.g.editorconfig = true
+
 vim.opt.relativenumber = false
 vim.opt.spelllang = { "en", "fr" }
 vim.opt.spell = true
+
+-- PHP: Intelephense is closest to PhpStorm for completion and references. Use "phpactor" for refactor-heavy workflows.
+vim.g.lazyvim_php_lsp = "intelephense"
+
+-- LazyVim runs Conform on each :w when this is true (see lazyvim.util.format BufWritePre).
+vim.g.autoformat = true
 
 -- Change the default snack picker to use telescope
 -- vim.g.lazyvim_picker = "telescope"
