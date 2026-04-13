@@ -6,9 +6,12 @@ return {
     inlay_hints = {
       enabled = false,
     },
-    -- Option to disable virtual text for LSP diagnostics
     diagnostics = {
-      virtual_text = false,
+      -- Keep the buffer readable: only show inline text for errors (syntax, etc.).
+      -- Warnings still appear in the sign column, :Trouble, and floats (see autocmds).
+      virtual_text = {
+        severity = { min = vim.diagnostic.severity.ERROR },
+      },
       float = {
         source = true,
         border = "rounded",

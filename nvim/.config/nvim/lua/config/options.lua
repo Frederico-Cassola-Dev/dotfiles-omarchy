@@ -5,6 +5,12 @@ vim.opt.relativenumber = false
 vim.opt.spelllang = { "en", "fr" }
 vim.opt.spell = true
 
+-- PHP: Intelephense is closest to PhpStorm for completion and references. Use "phpactor" for refactor-heavy workflows.
+vim.g.lazyvim_php_lsp = "intelephense"
+
+-- LazyVim runs Conform on each :w when this is true (see lazyvim.util.format BufWritePre).
+vim.g.autoformat = true
+
 -- Change the default snack picker to use telescope
 -- vim.g.lazyvim_picker = "telescope"
 --
